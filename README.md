@@ -111,6 +111,11 @@ curl --location 'http://localhost:8081/api/v1/citas/682e583fe47a477a7f2c7616' \
 - Maven o Gradle
 - Swagger
 - Lombok (Para reducir los getters y setters)
+- Junit(Falta implementar mas metodos)
+
+## 🧪 Base de datos
+
+- MongoDB
 
 ## 🧪 Patron de diseño
 - Solid
