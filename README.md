@@ -3,6 +3,23 @@
 Esta API permite gestionar citas médicas y médicos. Requiere autenticación mediante JWT para acceder a los recursos protegidos.
 
 ---
+# Autores
+
+#### - Fernando Tapia Coronado (Dev)
+
+---
+# Mentores
+
+#### - Youtube y muchos tutoriales de diferentes fuentes :(.
+
+---
+
+# Advertencia
+
+#### Estas implementaciones son modelos muy basicos para entender un poco de la programación, aun sigo desarrollando mil gracias.
+
+
+---
 
 ## 🔐 Autenticación
 
@@ -29,6 +46,8 @@ Response
 
 
 ## 📬 Endpoints disponibles
+
+#### Para mas informacion de los servicios ingresar a la ruta config : path(localhost:8081) + /webjars/swagger-ui/index.html
 ### 📅 Citas
 | Método | Endpoint           | Descripción              | Autenticación |
 | ------ | ------------------ | ------------------------ | ------------- |
@@ -39,13 +58,26 @@ Response
 
  📌 Ejemplo de creación de cita (POST)
 ```
-{
-"pacienteId": "12345",
-"medicoId": "54321",
-"fecha": "2025-05-21T10:30:00",
-"motivo": "Consulta general"
-}
+curl --location 'http://localhost:8081/api/v1/citas' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNzQ3ODY4NTQ2LCJleHAiOjE3NDc4NzIxNDZ9.pMUW4v_tQhKUm-p6fH5U0orfiwX6sstK753jye87hHs' \
+--header 'Content-Type: application/json' \
+--data '{
+  "idMedico": "MD123",
+  "pacienteNombre": "Fernando Tapia C",
+  "especialidad": "Cardiologia",
+  "medico": "Luis Andrade",
+  "fechaHora": "2025-05-21T22:22:08.840Z",
+  "motivo": "Cardio"
+}'
 ```
+
+📌 Ejemplo de obtener cita por Id (POST)
+```
+curl --location 'http://localhost:8081/api/v1/citas/682e583fe47a477a7f2c7616' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNzQ3ODY4NTQ2LCJleHAiOjE3NDc4NzIxNDZ9.pMUW4v_tQhKUm-p6fH5U0orfiwX6sstK753jye87hHs'
+```
+
+📅 Medicos
 
 | Método | Endpoint             | Descripción               | Autenticación |
 | ------ | -------------------- | ------------------------- | ------------- |
@@ -77,8 +109,11 @@ Response
 - Java 17
 - RX
 - Maven o Gradle
+- Swagger
+- Lombok (Para reducir los getters y setters)
 
-
+## 🧪 Patron de diseño
+- Solid
 ---
 
 
