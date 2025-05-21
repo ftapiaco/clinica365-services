@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
 
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor          // Constructor sin parámetros
+@AllArgsConstructor         // Constructor con todos los parámetros
 @Document(collection = "citas")
 public class Cita {
     @Id

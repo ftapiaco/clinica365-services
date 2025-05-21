@@ -4,11 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor          // Constructor sin parámetros
+@AllArgsConstructor         // Constructor con todos los parámetros
 public class CitaRequest {
-    private String fecha;
+    private String id;
     private String idMedico;
-    private String idPaciente;
+    private String pacienteNombre;
+    private String especialidad;
+    private String medico;
+    private LocalDateTime fechaHora;
+    private String motivo;
+
 }

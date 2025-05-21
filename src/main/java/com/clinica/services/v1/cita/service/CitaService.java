@@ -1,8 +1,9 @@
 package com.clinica.services.v1.cita.service;
 
-//import com.clinica.services.v1.cita.domain.Cita;
+import com.clinica.services.v1.cita.domain.Cita;
 import com.clinica.services.v1.cita.dto.CitaRequest;
 import com.clinica.services.v1.cita.dto.CitaResponse;
+import com.clinica.services.v1.cita.mapper.CitaMapper;
 import com.clinica.services.v1.cita.repository.CitaRepository;
 import com.clinica.services.v1.cita.validation.ValidadorCita;
 import com.clinica.services.v1.exception.ResourceNotFoundException;
@@ -13,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import com.clinica.services.v1.cita.mapper.CitaMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,10 +48,13 @@ public class CitaService {
         this.validadores = validadores;
     }
 
-    public Mono<ResponseEntity<CitaResponse>> registrar(CitaRequest cita) {
-        return validar(cita)
-                .then(repository.save(cita))
-                .map(savedCita -> ResponseEntity.status(HttpStatus.CREATED).body(savedCita))
+    public Mono<ResponseEntity<CitaResponse>> registrar(CitaRequest citaRequest) {
+        Cita cita = CitaMapper.toEntity(citaRequest); // primero convertir
+        logger.info("dato enviado a validar {}", util.toJsonString(citaRequest));
+        return validar(cita) // validar la entidad
+                .then(repository.save(cita)) // guardar después de validar
+                .map(CitaMapper::toResponse).log() // mapear respuesta
+                .map(savedResponse -> ResponseEntity.status(HttpStatus.CREATED).body(savedResponse))
                 .onErrorResume(ResourceNotFoundException.class, ex ->
                         Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build()))
                 .onErrorResume(Exception.class, ex ->
@@ -59,24 +63,22 @@ public class CitaService {
 
     public Mono<ResponseEntity<List<CitaResponse>>> listar() {
         return repository.findAll()
-                .doOnNext(cita ->logger.info("Cita encontrada: {}",cita))
+                .doOnNext(cita -> logger.info("Cita encontrada: {}", cita))
+                .map(CitaMapper::toResponse)  // mapeo por cada entidad
                 .collectList()
-                .doOnSuccess(citas -> logger.info("Total citas encontradas: {}",util.toJsonString(citas)))
-                .map(ResponseEntity::ok)
+                .doOnSuccess(citas -> logger.info("Total citas encontradas: {}", util.toJsonString(citas)))
+                .map(citasResponse -> ResponseEntity.ok(citasResponse))
                 .onErrorResume(Exception.class, ex ->
-                        Mono.error(new RuntimeException("Error al listar la cita: " + ex.getMessage())))
-                ;
+                        Mono.error(new RuntimeException("Error al listar las citas: " + ex.getMessage())));
     }
 
     public Mono<ResponseEntity<CitaResponse>> buscarPorId(String id) {
         return repository.findById(id)
-                .map(CitaMapper::citaResponseMap)
-                //.map(ResponseEntity::ok)
-                .map(cita -> new ResponseEntity<>(cita, HttpStatus.OK))
+                .map(CitaMapper::toResponse)
+                .map(citaResponse -> ResponseEntity.ok(citaResponse))
                 .switchIfEmpty(Mono.error(new ResourceNotFoundException("Cita no encontrada con ID: " + id)))
                 .onErrorResume(Exception.class, ex ->
                         Mono.error(new RuntimeException("Error al buscar la cita: " + ex.getMessage())));
-
     }
 
     private Mono<Void> validar(Cita cita) {
@@ -84,6 +86,8 @@ public class CitaService {
                 .flatMap(validador -> validador.validar(cita))
                 .then();
     }
+
+
 
 
 }

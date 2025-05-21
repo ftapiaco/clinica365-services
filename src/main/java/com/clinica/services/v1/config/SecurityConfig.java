@@ -21,29 +21,27 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
-                //Desactiva protección CSRF para REST API
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
-
-                //Desactiva login y HTTP básico (usamos JWT)
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
-
-                //Configura reglas de autorización
                 .authorizeExchange(exchanges -> exchanges
-                        // Rutas públicas (ej. login o registro)
-                        .pathMatchers("/auth/**").permitAll()
+                        // ✅ Rutas públicas: Swagger y login
+                        .pathMatchers(
+                                "/auth/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
 
-                        //Rutas protegidas (requieren JWT)
+                        // ✅ Rutas protegidas
                         .pathMatchers("/api/v1/**").authenticated()
-                        //.pathMatchers("/api/v1/medicos/**").authenticated()
 
-                        //Todo lo demás se deniega
+                        // ❌ Todo lo demás denegado
                         .anyExchange().denyAll()
                 )
-
-                //Filtro JWT agregado al flujo de seguridad
                 .addFilterAt(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
-
                 .build();
     }
 }

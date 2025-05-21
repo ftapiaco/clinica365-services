@@ -1,17 +1,40 @@
 package com.clinica.services.v1.cita.mapper;
 
 import com.clinica.services.v1.cita.domain.Cita;
+import com.clinica.services.v1.cita.dto.CitaRequest;
 import com.clinica.services.v1.cita.dto.CitaResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CitaMapper {
+    private static final Logger logger = LoggerFactory.getLogger(CitaMapper.class);
 
-    public static CitaResponse citaResponseMap(Cita cita) {
-        CitaResponse dto = new CitaResponse();
-        dto.setId(cita.getId());
-        dto.setFecha(cita.getFechaHora().toString());
-        dto.setEspecialidad(cita.getEspecialidad());
-        dto.setMedico(cita.getMedico());
+    public static Cita toEntity(CitaRequest request) {
+        logger.info("request {}",request);
+        Cita cita = new Cita();
+        cita.setIdMedico(request.getIdMedico());
+        cita.setPacienteNombre(request.getPacienteNombre());
+        cita.setEspecialidad(request.getEspecialidad());
+        cita.setMedico(request.getMedico());
+        cita.setFechaHora(request.getFechaHora());
+        cita.setMotivo(request.getMotivo());
+        logger.info("toEntity {}",cita);
+        return cita;
 
-        return dto;
+    }
+
+    public static CitaResponse toResponse(Cita cita) {
+        logger.info("Cita {}",cita);
+        CitaResponse response = new CitaResponse();
+        response.setId(cita.getId());
+        //response.set(cita.getIdMedico());
+        response.setPacienteNombre(cita.getPacienteNombre());
+        response.setEspecialidad(cita.getEspecialidad());
+        response.setMedico(cita.getMedico());
+        response.setFecha(cita.getFechaHora());
+        response.setMedico(cita.getMedico());
+        response.setMotivo(cita.getMotivo());
+        logger.info("toResponse {}",response);
+        return response;
     }
 }
