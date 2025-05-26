@@ -16,7 +16,7 @@ Esta API permite gestionar citas médicas y médicos. Requiere autenticación me
 
 # Advertencia
 
-#### Estas implementaciones son modelos muy basicos para entender un poco de la programación, aun sigo desarrollando mil gracias.
+#### Estas implementaciones son modelos muy basicos para entender un poco de la programación, todavia sigo desarrollando mil gracias.
 
 
 ---

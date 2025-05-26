@@ -1,11 +1,14 @@
 server:
   port: 8081
 
+#spring:
+#  data:
+#    mongodb:
+#      uri: mongodb://localhost:27017/spring_boot_test
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/spring_boot_test
-
+      uri: mongodb://mongo:27017/spring_boot_test
 springdoc:
   api-docs:
     path: /v3/api-docs

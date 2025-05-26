@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clinic-api
+  labels:
+    app: clinic-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clinic-api
+  template:
+    metadata:
+      labels:
+        app: clinic-api
+    spec:
+      containers:
+        - name: clinic-api
+          image: fernandotapiaco/clinica-repository:tagname
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_DATA_MONGODB_URI
+              value: mongodb://mongo:27017/spring_boot_test
