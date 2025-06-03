@@ -1,10 +1,10 @@
 steps:
-  # Paso 1: Compilar el proyecto con Maven y generar el .jar
+  # Paso 1: compilar el proyecto con Maven
   - name: 'maven:3.8.5-openjdk-17'
     entrypoint: 'mvn'
-    args: ['clean', 'package', '-DskipTests']
+    args: ['clean', 'install']
 
-  # Paso 2: Construir la imagen Docker usando el Dockerfile
+  # Paso 2: construir la imagen Docker
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build',
@@ -12,7 +12,7 @@ steps:
       '.'
     ]
 
-  # Paso 3: Subir la imagen a Google Artifact Registry
+  # Paso 3: subir la imagen al Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push',
