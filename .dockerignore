@@ -1,12 +1,13 @@
-# Ignorar carpetas de código fuente (si no las necesitas en el contenedor)
-src/
-# Ignorar archivos temporales de IDE
+# Ignorar archivos de configuración innecesarios
+.git
+.gitignore
+.idea
 *.iml
 *.log
-.idea/
-.vscode/
-# Ignorar carpetas de build que NO quieres incluir (si tienes que copiar el JAR de target, no ignores target/)
-#target/
 
-# Ignorar archivos de configuración local o secretos
-.env
+# Ignorar test outputs y compilaciones temporales
+**/test-classes/
+
+# Ignorar archivos que Maven puede regenerar (excepto target/)
+# target/ se incluye porque necesitamos el .jar para Docker
+# Si quieres ignorar TODO excepto el .jar, puedes usar un ! (ver más abajo)
