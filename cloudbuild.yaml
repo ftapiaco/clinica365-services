@@ -1,0 +1,23 @@
+steps:
+  # Paso 1: Construir el proyecto con Maven
+  - name: 'maven:3.8.5-openjdk-17'   # Imagen con Maven y JDK 17
+    entrypoint: 'mvn'
+    args: ['clean', 'package', '-DskipTests']
+
+  # Paso 2: Construir la imagen Docker
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', 'us-central1-docker.pkg.dev/magnetic-energy-461823-a0/clinicarepo/clinica365',
+      '.'
+    ]
+
+  # Paso 3: Subir la imagen a Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'push',
+      'us-central1-docker.pkg.dev/magnetic-energy-461823-a0/clinicarepo/clinica365'
+    ]
+
+images:
+  - 'us-central1-docker.pkg.dev/magnetic-energy-461823-a0/clinicarepo/clinica365'
