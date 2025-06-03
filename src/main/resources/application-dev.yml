@@ -1,11 +1,18 @@
 server:
-  port: 8081
+  port: 8083
 
+#spring:
+#  data:
+#    mongodb:
+#      uri: mongodb://localhost:27017/spring_boot_test
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/spring_boot_test
-
+      #uri: mongodb://mongo:27017/spring_boot_test
+      #uri: mongodb://localhost:27017/spring_boot_test
+      #uri: mongodb+srv://mongoAdmin:C0sm0%23Secure2024%21@mongo-clinica-prd.global.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000
+      uri: mongodb+srv://mongoAdmin:C0sm0%23Secure2024%21@mongo-clinica-prd.global.mongocluster.cosmos.azure.com/bdclinica?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000
+      #uri: ${SPRING_DATA_MONGODB_URI}
 springdoc:
   api-docs:
     path: /v3/api-docs
@@ -20,3 +27,4 @@ springdoc:
     try-it-out-enabled: true
     packages-to-scan: com.clinica.services.v1.cita.controller,com.clinica.services.v1.medico.controller
   default-produces-media-type: application/json
+
