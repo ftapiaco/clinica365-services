@@ -1,28 +1,23 @@
 steps:
-  # Paso 1: Construir con Maven (genera el JAR)
+  # Paso 1: Compilar el proyecto con Maven y generar el .jar
   - name: 'maven:3.8.5-openjdk-17'
     entrypoint: 'mvn'
     args: ['clean', 'package', '-DskipTests']
-    id: 'build-maven'
 
-  # Paso 2: Construir la imagen Docker con el JAR generado
+  # Paso 2: Construir la imagen Docker usando el Dockerfile
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build',
       '-t', 'us-central1-docker.pkg.dev/magnetic-energy-461823-a0/clinicarepo/clinica365',
       '.'
     ]
-    waitFor:
-      - 'build-maven'
 
-  # Paso 3 (opcional): Pushear la imagen al repositorio
+  # Paso 3: Subir la imagen a Google Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push',
       'us-central1-docker.pkg.dev/magnetic-energy-461823-a0/clinicarepo/clinica365'
     ]
-    waitFor:
-      - 'build-maven'
 
 images:
   - 'us-central1-docker.pkg.dev/magnetic-energy-461823-a0/clinicarepo/clinica365'
