@@ -10,9 +10,9 @@
 	</parent>
 
 	<groupId>com.clinica</groupId>
-	<artifactId>services-clinic</artifactId>
+	<artifactId>clinica365-services</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>services-clinic</name>
+	<name>clinica365-services</name>
 	<description>proyecto clinico</description>
 	<url/>
 	<licenses>
