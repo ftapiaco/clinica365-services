@@ -1,0 +1,13 @@
+# Ignorar archivos generados
+target/*
+!.dockerignore
+!.gitignore
+!.git/
+!pom.xml
+
+# Ignorar archivos de IDEs
+.idea/
+.vscode/
+
+# Otras carpetas de configuración
+*.log
