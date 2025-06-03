@@ -1,0 +1,12 @@
+# Ignorar carpetas de código fuente (si no las necesitas en el contenedor)
+src/
+# Ignorar archivos temporales de IDE
+*.iml
+*.log
+.idea/
+.vscode/
+# Ignorar carpetas de build que NO quieres incluir (si tienes que copiar el JAR de target, no ignores target/)
+#target/
+
+# Ignorar archivos de configuración local o secretos
+.env
