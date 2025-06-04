@@ -5,6 +5,7 @@ import com.clinica.services.v1.medico.domain.Medico;
 import com.clinica.services.v1.medico.service.MedicoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
+@Tag(name = "Medicos", description = "Gestión de información de los medicos")
 public class MedicoController {
     private static final Logger logger = LoggerFactory.getLogger(MedicoController.class);
 
@@ -35,11 +37,15 @@ public class MedicoController {
     }
 
     @PutMapping(value = "/medico")
+    @Operation(summary = "Crea nuevo médico activos", description = "crea el médico")
+    @ApiResponse(responseCode = "201", description = "medico creado correctamente")
     public Mono<ResponseEntity<Medico>> crear(@RequestBody Medico medico) {
         return service.crear(medico);
     }
 
     @GetMapping(value = "/medico/{id}")
+    @Operation(summary = "Busca el medico por su codigo", description = "Retorna el medico por su id")
+    @ApiResponse(responseCode = "200", description = "medico obtenido correctamente")
     public Mono<ResponseEntity<Medico>> obtener(@PathVariable String id) {
         return service.obtenerPorId(id);
     }

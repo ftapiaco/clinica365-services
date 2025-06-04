@@ -1,9 +1,7 @@
 package com.clinica.services.v1.medico.service;
 
 
-import com.clinica.services.v1.cita.domain.Cita;
-import com.clinica.services.v1.cita.service.CitaService;
-import com.clinica.services.v1.exception.ResourceNotFoundException;
+import com.clinica.services.v1.exception.exceptions.ResourceNotFoundException;
 import com.clinica.services.v1.medico.domain.Medico;
 import com.clinica.services.v1.medico.repository.MedicoRepository;
 import org.slf4j.Logger;

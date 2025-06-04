@@ -11,5 +11,7 @@ exception-bindings:
 error:
   catalog:
     errorMessages:
-      resourceNotFound: "The requested resource was not found."
-      internalServerError: "An unexpected error occurred."
+      resourceNotFound: "El recurso solicitado no fue encontrado."
+      badRequestError: "La solicitud no es válida."
+      unauthorizedError: "No autorizado para realizar esta operación."
+      internalServerError: "Ocurrió un error inesperado en el servidor."

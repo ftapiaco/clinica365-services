@@ -6,7 +6,10 @@ import com.clinica.services.v1.cita.dto.CitaResponse;
 import com.clinica.services.v1.cita.mapper.CitaMapper;
 import com.clinica.services.v1.cita.repository.CitaRepository;
 import com.clinica.services.v1.cita.validation.ValidadorCita;
-import com.clinica.services.v1.exception.ResourceNotFoundException;
+import com.clinica.services.v1.exception.exceptions.BadRequestException;
+import com.clinica.services.v1.exception.exceptions.GenericException;
+import com.clinica.services.v1.exception.exceptions.ResourceNotFoundException;
+import com.clinica.services.v1.exception.exceptions.UnauthorizedException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -67,18 +70,34 @@ public class CitaService {
                 .map(CitaMapper::toResponse)  // mapeo por cada entidad
                 .collectList()
                 .doOnSuccess(citas -> logger.info("Total citas encontradas: {}", util.toJsonString(citas)))
-                .map(citasResponse -> ResponseEntity.ok(citasResponse))
-                .onErrorResume(Exception.class, ex ->
-                        Mono.error(new RuntimeException("Error al listar las citas: " + ex.getMessage())));
+                .map(ResponseEntity::ok)
+                .onErrorMap(ex -> {
+                    // Si ya es una excepción personalizada, no la toques
+                    if (ex instanceof BadRequestException ||
+                            ex instanceof UnauthorizedException ||
+                            ex instanceof GenericException) {
+                        return ex;
+                    }
+                    // Aquí sí puedes envolver otras excepciones como errores generales
+                    return new GenericException("Error General: " + ex.getMessage());
+                });
     }
 
     public Mono<ResponseEntity<CitaResponse>> buscarPorId(String id) {
         return repository.findById(id)
                 .map(CitaMapper::toResponse)
-                .map(citaResponse -> ResponseEntity.ok(citaResponse))
+                .map(ResponseEntity::ok)
                 .switchIfEmpty(Mono.error(new ResourceNotFoundException("Cita no encontrada con ID: " + id)))
-                .onErrorResume(Exception.class, ex ->
-                        Mono.error(new RuntimeException("Error al buscar la cita: " + ex.getMessage())));
+                .onErrorMap(ex -> {
+                    // Si ya es una excepción personalizada, no la toques
+                    if (ex instanceof BadRequestException ||
+                            ex instanceof UnauthorizedException ||
+                            ex instanceof GenericException) {
+                        return ex;
+                    }
+                    // Aquí sí puedes envolver otras excepciones como errores generales
+                    return new GenericException("Error General: " + ex.getMessage());
+                });
     }
 
     private Mono<Void> validar(Cita cita) {

@@ -6,6 +6,8 @@ server:
 #    mongodb:
 #      uri: mongodb://localhost:27017/spring_boot_test
 spring:
+  config:
+    import: classpath:error-catalog.yml
   data:
     mongodb:
       #uri: mongodb://mongo:27017/spring_boot_test

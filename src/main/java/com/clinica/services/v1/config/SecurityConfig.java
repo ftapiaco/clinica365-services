@@ -25,20 +25,20 @@ public class SecurityConfig {
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
-                        // ✅ Rutas públicas: Swagger y login
+                        // Rutas públicas: Swagger y login
                         .pathMatchers(
                                 "/auth/**",
-                                "/v3/api-docs/**",
+                                "/v1/api-docs/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",
                                 "/webjars/**"
                         ).permitAll()
 
-                        // ✅ Rutas protegidas
+                        // Rutas protegidas
                         .pathMatchers("/api/v1/**").authenticated()
 
-                        // ❌ Todo lo demás denegado
+                        // Todo lo demás denegado
                         .anyExchange().denyAll()
                 )
                 .addFilterAt(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)

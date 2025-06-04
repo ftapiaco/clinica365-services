@@ -1,41 +1,70 @@
 package com.clinica.services.v1.auth.controller;
 
 import com.clinica.services.v1.auth.dto.AuthRequest;
-import com.clinica.services.v1.auth.jwt.JwtUtil;
-import com.clinica.services.v1.cita.service.CitaService;
+import com.clinica.services.v1.auth.dto.AuthResponse;
+import com.clinica.services.v1.auth.service.AuthService;
+import com.clinica.services.v1.exception.exceptions.BadRequestException;
+import com.clinica.services.v1.exception.exceptions.GenericException;
+import com.clinica.services.v1.exception.exceptions.UnauthorizedException;
+import com.clinica.services.v1.exception.dto.ErrorResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-
-import java.util.Map;
+import com.clinica.services.v1.config.utils.*;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Autenticación", description = "Operaciones relacionadas con la autenticación del JWT")
 public class AuthController {
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+    private final AuthService authService;
 
-    private final JwtUtil jwtUtil;
 
-    public AuthController(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
     @PostMapping("/login")
-    public Mono<ResponseEntity<Map<String, String>>> login(@RequestBody AuthRequest auth) {
-        logger.info("datos {}",auth);
-        // Validación de usuario (dummy)
-        if ("user".equals(auth.getUsername()) && "pass".equals(auth.getPassword())) {
-            logger.info("dato 1 {} ",auth);
-            String token = jwtUtil.generateToken(auth.getUsername());
-            return Mono.just(ResponseEntity.ok(Map.of("token", token)));
-        }
-        return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+    @Operation(
+            summary = "Iniciar sesión",
+            description = "Permite autenticar al usuario y generar un token JWT si las credenciales son válidas.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Autenticación exitosa. Token JWT generado.",
+                            content = @Content(schema = @Schema(implementation = AuthResponse.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Credenciales inválidas",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+                    )
+            }
+    )
+    public Mono<ResponseEntity<AuthResponse>> login(@Valid @RequestBody AuthRequest authRequest, ServerHttpRequest request) {
+        logger.info("Inicio login");
+        logger.info("Request obtenido AuthRequest : {}", util.toJsonString( authRequest));
+        return authService.authenticate(authRequest)
+                .map(ResponseEntity::ok)
+                .switchIfEmpty(Mono.error(new UnauthorizedException("Credenciales inválidas")))
+                .onErrorMap(ex -> {
+
+                    if (ex instanceof BadRequestException ||
+                            ex instanceof UnauthorizedException ||
+                            ex instanceof GenericException) {
+                        return ex;
+                    }
+
+                    return new GenericException("Error General: " + ex.getMessage());
+                });
     }
 }
-

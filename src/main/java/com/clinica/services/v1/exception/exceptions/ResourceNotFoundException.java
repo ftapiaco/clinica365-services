@@ -1,4 +1,4 @@
-package com.clinica.services.v1.exception;
+package com.clinica.services.v1.exception.exceptions;
 /*
     Qué hace:
     Es una excepción personalizada para cuando no se encuentra una cita u otro recurso.
