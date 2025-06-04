@@ -1,6 +1,0 @@
-# Ignorar archivos que no son necesarios para el build
-.idea/
-.vscode/
-*.log
-*.iml
-target/*   # Ignorar el contenido de la carpeta target, excepto el archivo JAR.
