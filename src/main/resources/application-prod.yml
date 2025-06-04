@@ -1,4 +1,4 @@
- aserver:
+ server:
   port: 8083
 
 #spring:
