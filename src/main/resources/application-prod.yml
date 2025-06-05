@@ -2,6 +2,8 @@ server:
   #port: 8083 # usa el valor de PORT (de Cloud Run) o 8083 si no está definido
   port: ${PORT:8083}
 spring:
+  config:
+    import: classpath:error-catalog.yml
   data:
     mongodb:
       uri: mongodb+srv://mongoAdmin:C0sm0%23Secure2024%21@mongo-clinica-prd.global.mongocluster.cosmos.azure.com/bdclinica?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000
