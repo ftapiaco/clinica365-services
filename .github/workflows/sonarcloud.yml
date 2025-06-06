@@ -39,8 +39,9 @@ jobs:
       - name: Build and analyze on SonarCloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn clean verify sonar:sonar \
-          -Dsonar.projectKey=clinica365-services \
-          -Dsonar.organization=clinica365 \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        run: |
+          mvn clean verify sonar:sonar \
+            -Dsonar.projectKey=clinica365-services \
+            -Dsonar.organization=clinica365 \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
