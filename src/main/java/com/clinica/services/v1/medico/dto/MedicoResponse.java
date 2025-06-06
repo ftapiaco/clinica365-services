@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor          // Constructor sin parámetros
+@NoArgsConstructor          // Constructor sin parámetros.
 @AllArgsConstructor         // Constructor con todos los parámetros
 public class MedicoResponse {
     private String idMedico;
