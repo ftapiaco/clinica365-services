@@ -85,9 +85,10 @@ public class CitaService {
 
     public Mono<ResponseEntity<CitaResponse>> buscarPorId(String id) {
         return repository.findById(id)
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Cita no encontrada con ID: " + id)))
                 .map(CitaMapper::toResponse)
                 .map(ResponseEntity::ok)
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Cita no encontrada con ID: " + id)))
+
                 .onErrorMap(ex -> {
                     // Si ya es una excepción personalizada, no la toques
                     if (ex instanceof BadRequestException ||

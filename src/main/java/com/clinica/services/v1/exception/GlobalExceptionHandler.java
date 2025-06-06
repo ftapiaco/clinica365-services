@@ -35,15 +35,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleNotFound(ResourceNotFoundException ex) {
-        String message = errorCatalogProperties.getErrorMessages().get("resourceNotFound");
+        // Prioriza el mensaje de la excepción personalizada
+        String message = ex.getMessage(); // <- este mensaje viene del "Cita no encontrada con ID: ..."
+
         ErrorResponse error = new ErrorResponse(
                 LocalDateTime.now(),
                 HttpStatus.NOT_FOUND.value(),
                 "Not Found",
-                message != null ? message : ex.getMessage()
+                message != null ? message : errorCatalogProperties.getErrorMessages().get("resourceNotFound")
         );
         return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(error));
     }
+
 
     @ExceptionHandler(GenericException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleGenericException(Exception ex) {

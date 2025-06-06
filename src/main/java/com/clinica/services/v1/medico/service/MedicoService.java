@@ -52,13 +52,15 @@ public class MedicoService {
 
     public Mono<ResponseEntity<MedicoResponse>> obtenerPorId(String id) {
         return repository.findById(id)
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Cita no encontrada con ID: " + id)))
                 .map(MedicoMapper::toResponse)
                 .map(ResponseEntity::ok)
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Médico no encontrado con ID: " + id)))
-                .onErrorResume(ResourceNotFoundException.class, ex ->
-                        Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(null))
-                )
-                .onErrorResume(Exception.class, ex ->
-                        Mono.error(new RuntimeException("Error al buscar el medico: " + ex.getMessage())));
+
+                //.onErrorResume(ResourceNotFoundException.class, ex ->
+                //        Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(null))
+                //)
+                //.onErrorResume(Exception.class, ex ->
+                //        Mono.error(new RuntimeException("Error al buscar el medico: " + ex.getMessage())))
+                ;
     }
 }
