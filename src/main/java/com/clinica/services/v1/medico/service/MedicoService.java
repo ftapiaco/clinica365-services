@@ -3,6 +3,9 @@ package com.clinica.services.v1.medico.service;
 
 import com.clinica.services.v1.exception.exceptions.ResourceNotFoundException;
 import com.clinica.services.v1.medico.domain.Medico;
+import com.clinica.services.v1.medico.dto.MedicoRequest;
+import com.clinica.services.v1.medico.dto.MedicoResponse;
+import com.clinica.services.v1.medico.mapper.MedicoMapper;
 import com.clinica.services.v1.medico.repository.MedicoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +28,11 @@ public class MedicoService {
         this.repository = repository;
     }
 
-    public Mono<ResponseEntity<List<Medico>>> listarActivos() {
+    public Mono<ResponseEntity<List<MedicoResponse>>> listarActivos() {
         return repository.findByActivoTrue()
+                .map(MedicoMapper::toResponse)
                 .collectList()
-                .doOnNext(medico ->logger.info("Medicos encontrada: {}",util.toJsonString( medico)))
+                .doOnSuccess(medico ->logger.info("Medicos encontrada: {}",util.toJsonString( medico)))
                 .map(ResponseEntity::ok)
                 .onErrorResume(Exception.class, ex ->
                         Mono.error(new RuntimeException("Error al listar la cita: " + ex.getMessage())))
@@ -36,15 +40,19 @@ public class MedicoService {
     }
 
 
-    public Mono<ResponseEntity<Medico>> crear(Medico medico) {
-        return repository.save(medico).map(med -> new ResponseEntity<>(med, HttpStatus.CREATED))
+    public Mono<ResponseEntity<MedicoResponse>> crear(MedicoRequest medicoRequest) {
+        Medico medico = MedicoMapper.toEntity(medicoRequest);
+        return repository.save(medico)
+                .map( MedicoMapper::toResponse)
+                .map(med -> new ResponseEntity<>(med, HttpStatus.CREATED))
                 .onErrorResume(Exception.class, ex ->
                         Mono.error(new RuntimeException("Error al registrar el medico: " + ex.getMessage())));
 
     }
 
-    public Mono<ResponseEntity<Medico>> obtenerPorId(String id) {
+    public Mono<ResponseEntity<MedicoResponse>> obtenerPorId(String id) {
         return repository.findById(id)
+                .map(MedicoMapper::toResponse)
                 .map(ResponseEntity::ok)
                 .switchIfEmpty(Mono.error(new ResourceNotFoundException("Médico no encontrado con ID: " + id)))
                 .onErrorResume(ResourceNotFoundException.class, ex ->

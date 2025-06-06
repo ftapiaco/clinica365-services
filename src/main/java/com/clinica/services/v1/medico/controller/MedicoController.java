@@ -1,7 +1,8 @@
 package com.clinica.services.v1.medico.controller;
 
 import com.clinica.services.v1.auth.controller.AuthController;
-import com.clinica.services.v1.medico.domain.Medico;
+import com.clinica.services.v1.medico.dto.*;
+
 import com.clinica.services.v1.medico.service.MedicoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -31,7 +32,7 @@ public class MedicoController {
     @GetMapping("/medico")
     @Operation(summary = "Listar médicos activos", description = "Retorna todos los médicos con estado activo")
     @ApiResponse(responseCode = "200", description = "Lista obtenida correctamente")
-    public Mono<ResponseEntity<List<Medico>>> listar() {
+    public Mono<ResponseEntity<List<MedicoResponse>>> listar() {
         logger.info("ingreso");
         return service.listarActivos();
     }
@@ -39,14 +40,14 @@ public class MedicoController {
     @PutMapping(value = "/medico")
     @Operation(summary = "Crea nuevo médico activos", description = "crea el médico")
     @ApiResponse(responseCode = "201", description = "medico creado correctamente")
-    public Mono<ResponseEntity<Medico>> crear(@RequestBody Medico medico) {
+    public Mono<ResponseEntity<MedicoResponse>> crear(@RequestBody MedicoRequest medico) {
         return service.crear(medico);
     }
 
     @GetMapping(value = "/medico/{id}")
     @Operation(summary = "Busca el medico por su codigo", description = "Retorna el medico por su id")
     @ApiResponse(responseCode = "200", description = "medico obtenido correctamente")
-    public Mono<ResponseEntity<Medico>> obtener(@PathVariable String id) {
+    public Mono<ResponseEntity<MedicoResponse>> obtener(@PathVariable String id) {
         return service.obtenerPorId(id);
     }
 }
