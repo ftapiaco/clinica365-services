@@ -42,6 +42,6 @@ jobs:
         run: |
           mvn clean verify sonar:sonar \
             -Dsonar.projectKey=clinica365-services \
-            -Dsonar.organization=clinica365 \
+            -Dsonar.organization=ftapiaco \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
