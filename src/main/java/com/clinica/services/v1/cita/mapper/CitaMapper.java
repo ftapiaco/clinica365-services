@@ -27,7 +27,6 @@ public class CitaMapper {
         logger.info("Cita {}",cita);
         CitaResponse response = new CitaResponse();
         response.setId(cita.getId());
-        //response.set(cita.getIdMedico());
         response.setPacienteNombre(cita.getPacienteNombre());
         response.setEspecialidad(cita.getEspecialidad());
         response.setMedico(cita.getMedico());

@@ -1,6 +1,5 @@
 package com.clinica.services.v1.cita.controller;
 
-//import com.clinica.services.v1.cita.domain.Cita;
 import com.clinica.services.v1.cita.dto.CitaRequest;
 import com.clinica.services.v1.cita.dto.CitaResponse;
 import com.clinica.services.v1.cita.service.CitaService;
