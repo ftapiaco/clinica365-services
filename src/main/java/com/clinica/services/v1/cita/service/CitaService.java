@@ -24,18 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import com.clinica.services.v1.config.utils.*;
-/*
-Qué hace:
-    Contiene la lógica de negocio para gestionar citas (listar, registrar, buscar por ID, etc.). Usa el repositorio y devuelve objetos Mono/Flux.
 
-    Principio SOLID aplicado:
-
-    S: Se encarga exclusivamente de la lógica de negocio.
-
-    O (Open/Closed): Puedes extender el servicio sin modificarlo (por ejemplo, añadiendo validaciones).
-
-    D: Depende de interfaces (CitaRepository) y no implementaciones concretas.
- */
 @Service
 public class CitaService {
     private static final Logger logger = LoggerFactory.getLogger(CitaService.class);
@@ -51,18 +40,20 @@ public class CitaService {
         this.validadores = validadores;
     }
 
-    public Mono<ResponseEntity<CitaResponse>> registrar(CitaRequest citaRequest) {
-        Cita cita = CitaMapper.toEntity(citaRequest); // primero convertir
-        logger.info("dato enviado a validar {}", util.toJsonString(citaRequest));
-        return validar(cita) // validar la entidad
-                .then(repository.save(cita)) // guardar después de validar
-                .map(CitaMapper::toResponse).log() // mapear respuesta
-                .map(savedResponse -> ResponseEntity.status(HttpStatus.CREATED).body(savedResponse))
-                .onErrorResume(ResourceNotFoundException.class, ex ->
-                        Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build()))
-                .onErrorResume(Exception.class, ex ->
-                        Mono.error(new RuntimeException("Error al registrar la cita: " + ex.getMessage())));
+    public Mono<ResponseEntity<CitaResponse>> registrar(CitaRequest request) {
+        Cita cita = CitaMapper.toEntity(request);
+
+        return Flux.fromIterable(validadores)
+                .flatMap(validador -> {
+                    Mono<Void> validacion = validador.validar(cita);
+                    return validacion != null ? validacion : Mono.error(new NullPointerException("Validador devolvió null"));
+                })
+                .then(repository.save(cita))
+                .map(saved -> ResponseEntity.status(HttpStatus.CREATED).body(CitaMapper.toResponse(saved)))
+                .onErrorMap(err -> new RuntimeException("Error al registrar la cita: " + err.getMessage()));
     }
+
+
 
     public Mono<ResponseEntity<List<CitaResponse>>> listar() {
         return repository.findAll()
@@ -88,7 +79,6 @@ public class CitaService {
                 .switchIfEmpty(Mono.error(new ResourceNotFoundException("Cita no encontrada con ID: " + id)))
                 .map(CitaMapper::toResponse)
                 .map(ResponseEntity::ok)
-
                 .onErrorMap(ex -> {
                     // Si ya es una excepción personalizada, no la toques
                     if (ex instanceof BadRequestException ||
@@ -100,14 +90,16 @@ public class CitaService {
                     return new GenericException("Error General: " + ex.getMessage());
                 });
     }
-
     private Mono<Void> validar(Cita cita) {
+        if (validadores == null || validadores.isEmpty()) {
+            logger.warn("No hay validadores configurados para validar la cita.");
+            return Mono.empty();
+        }
         return Flux.fromIterable(validadores)
-                .flatMap(validador -> validador.validar(cita))
+                .flatMap(validador -> {
+                    Mono<Void> result = validador.validar(cita);
+                    return result != null ? result : Mono.empty();
+                })
                 .then();
     }
-
-
-
-
 }
