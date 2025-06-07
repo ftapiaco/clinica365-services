@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
@@ -56,15 +57,10 @@ public class AuthController {
         return authService.authenticate(authRequest)
                 .map(ResponseEntity::ok)
                 .switchIfEmpty(Mono.error(new UnauthorizedException("Credenciales inválidas")))
-                .onErrorMap(ex -> {
-
-                    if (ex instanceof BadRequestException ||
-                            ex instanceof UnauthorizedException ||
-                            ex instanceof GenericException) {
-                        return ex;
-                    }
-
-                    return new GenericException("Error General: " + ex.getMessage());
+                .onErrorResume(UnauthorizedException.class, ex -> {
+                    logger.error("Unauthorized exception atrapada en login: {}", ex.getMessage());
+                    return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
                 });
+
     }
 }
