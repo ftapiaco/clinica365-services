@@ -90,16 +90,5 @@ public class CitaService {
                     return new GenericException("Error General: " + ex.getMessage());
                 });
     }
-    private Mono<Void> validar(Cita cita) {
-        if (validadores == null || validadores.isEmpty()) {
-            logger.warn("No hay validadores configurados para validar la cita.");
-            return Mono.empty();
-        }
-        return Flux.fromIterable(validadores)
-                .flatMap(validador -> {
-                    Mono<Void> result = validador.validar(cita);
-                    return result != null ? result : Mono.empty();
-                })
-                .then();
-    }
+
 }

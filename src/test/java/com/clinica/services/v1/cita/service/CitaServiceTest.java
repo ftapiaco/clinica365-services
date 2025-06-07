@@ -5,6 +5,7 @@ import com.clinica.services.v1.cita.dto.CitaRequest;
 import com.clinica.services.v1.cita.dto.CitaResponse;
 import com.clinica.services.v1.cita.repository.CitaRepository;
 import com.clinica.services.v1.cita.validation.ValidadorCita;
+import com.clinica.services.v1.exception.exceptions.GenericException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -109,4 +111,19 @@ class CitaServiceTest {
 
         Mockito.verify(validadorCita, Mockito.times(1)).validar(Mockito.any(Cita.class));
     }
+
+    @Test
+    void listar_ErrorGenerico() {
+        Mockito.when(citaRepository.findAll())
+                .thenReturn(Flux.error(new RuntimeException("Error inesperado")));
+
+        StepVerifier.create(citaService.listar())
+                .expectErrorMatches(ex ->
+                        ex instanceof GenericException &&
+                                ex.getMessage().contains("Error General: Error inesperado"))
+                .verify();
+    }
+
+
+
 }
