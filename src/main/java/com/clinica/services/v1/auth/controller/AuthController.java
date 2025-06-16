@@ -3,8 +3,6 @@ package com.clinica.services.v1.auth.controller;
 import com.clinica.services.v1.auth.dto.AuthRequest;
 import com.clinica.services.v1.auth.dto.AuthResponse;
 import com.clinica.services.v1.auth.service.AuthService;
-import com.clinica.services.v1.exception.exceptions.BadRequestException;
-import com.clinica.services.v1.exception.exceptions.GenericException;
 import com.clinica.services.v1.exception.exceptions.UnauthorizedException;
 import com.clinica.services.v1.exception.dto.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,7 +51,10 @@ public class AuthController {
     )
     public Mono<ResponseEntity<AuthResponse>> login(@Valid @RequestBody AuthRequest authRequest, ServerHttpRequest request) {
         logger.info("Inicio login");
-        logger.info("Request obtenido AuthRequest : {}", util.toJsonString( authRequest));
+        //logger.info("Request obtenido AuthRequest : {}", util.toJsonString( authRequest));
+        if (logger.isInfoEnabled()) {
+            logger.info("Request obtenido AuthRequest : {}", Util.toJsonString(authRequest));
+        }
         return authService.authenticate(authRequest)
                 .map(ResponseEntity::ok)
                 .switchIfEmpty(Mono.error(new UnauthorizedException("Credenciales inválidas")))

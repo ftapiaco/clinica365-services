@@ -32,7 +32,7 @@ public class MedicoService {
         return repository.findByActivoTrue()
                 .map(MedicoMapper::toResponse)
                 .collectList()
-                .doOnSuccess(medico ->logger.info("Medicos encontrada: {}",util.toJsonString( medico)))
+                .doOnSuccess(medico ->logger.info("Medicos encontrada: {}",Util.toJsonString( medico)))
                 .map(ResponseEntity::ok)
                 .onErrorResume(Exception.class, ex ->
                         Mono.error(new RuntimeException("Error al listar la cita: " + ex.getMessage())))

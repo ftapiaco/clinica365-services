@@ -12,19 +12,19 @@ import reactor.test.StepVerifier;
 
 import static org.mockito.Mockito.*;
 
-public class JwtAuthenticationFilterTest {
+class JwtAuthenticationFilterTest {
 
     private JwtUtil jwtUtil;
     private JwtAuthenticationFilter filter;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         jwtUtil = new JwtUtil();
         filter = new JwtAuthenticationFilter(jwtUtil);
     }
 
     @Test
-    public void testFilter_withValidToken_shouldContinueChain() {
+    void testFilter_withValidToken_shouldContinueChain() {
         String token = jwtUtil.generateToken("testuser");
 
         MockServerHttpRequest request = MockServerHttpRequest.get("/api/protected")
@@ -42,7 +42,7 @@ public class JwtAuthenticationFilterTest {
     }
 
     @Test
-    public void testFilter_withNoToken_shouldContinueChain() {
+    void testFilter_withNoToken_shouldContinueChain() {
         MockServerHttpRequest request = MockServerHttpRequest.get("/api/protected")
                 .build();
         ServerWebExchange exchange = MockServerWebExchange.from(request);
@@ -57,7 +57,7 @@ public class JwtAuthenticationFilterTest {
     }
 
     @Test
-    public void testFilter_withInvalidToken_shouldContinueChain() {
+    void testFilter_withInvalidToken_shouldContinueChain() {
         MockServerHttpRequest request = MockServerHttpRequest.get("/api/protected")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer invalid.token.here")
                 .build(); // 👈 aquí estaba el problema
@@ -75,7 +75,7 @@ public class JwtAuthenticationFilterTest {
 
 
     @Test
-    public void testFilter_forPublicAuthPath_shouldSkipFilter() {
+    void testFilter_forPublicAuthPath_shouldSkipFilter() {
         MockServerHttpRequest request = MockServerHttpRequest.get("/auth/login").build();
         ServerWebExchange exchange = MockServerWebExchange.from(request);
 

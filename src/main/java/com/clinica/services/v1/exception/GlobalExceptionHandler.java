@@ -33,6 +33,8 @@ public class GlobalExceptionHandler {
     @Autowired
     private ErrorCatalogProperties errorCatalogProperties;
 
+    private static final String BADREQ = "badRequestError";  // Compliant
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleNotFound(ResourceNotFoundException ex) {
         String message = ex.getMessage();
@@ -61,7 +63,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadRequestException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleBadRequestException(Exception ex) {
-        String message = errorCatalogProperties.getErrorMessages().get("badRequestError");
+        String message = errorCatalogProperties.getErrorMessages().get(BADREQ);
         ErrorResponse error = new ErrorResponse(
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
@@ -85,7 +87,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleUnreadableBody(HttpMessageNotReadableException ex) {
-        String message = errorCatalogProperties.getErrorMessages().get("badRequestError");
+        String message = errorCatalogProperties.getErrorMessages().get(BADREQ);
 
         ErrorResponse error = new ErrorResponse(
                 LocalDateTime.now(),
@@ -99,7 +101,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DecodingException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleDecoding(DecodingException ex) {
-        String message = errorCatalogProperties.getErrorMessages().get("badRequestError");
+        String message = errorCatalogProperties.getErrorMessages().get(BADREQ);
 
         ErrorResponse error = new ErrorResponse(
                 LocalDateTime.now(),

@@ -2,8 +2,8 @@ package com.clinica.services.v1.config.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class util {
-    private util() {
+public class Util {
+    private Util() {
         super();
     }
 

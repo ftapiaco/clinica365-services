@@ -9,8 +9,13 @@ import org.slf4j.LoggerFactory;
 public class CitaMapper {
     private static final Logger logger = LoggerFactory.getLogger(CitaMapper.class);
 
+    // 👇 Evita que se instancie esta clase
+    private CitaMapper() {
+        throw new UnsupportedOperationException("Esta clase no puede ser instanciada");
+    }
+
     public static Cita toEntity(CitaRequest request) {
-        logger.info("request {}",request);
+        logger.info("request {}", request);
         Cita cita = new Cita();
         cita.setIdMedico(request.getIdMedico());
         cita.setPacienteNombre(request.getPacienteNombre());
@@ -18,22 +23,21 @@ public class CitaMapper {
         cita.setMedico(request.getMedico());
         cita.setFechaHora(request.getFechaHora());
         cita.setMotivo(request.getMotivo());
-        logger.info("toEntity {}",cita);
+        logger.info("toEntity {}", cita);
         return cita;
-
     }
 
     public static CitaResponse toResponse(Cita cita) {
-        logger.info("Cita {}",cita);
+        logger.info("Cita {}", cita);
         CitaResponse response = new CitaResponse();
         response.setId(cita.getId());
         response.setPacienteNombre(cita.getPacienteNombre());
         response.setEspecialidad(cita.getEspecialidad());
         response.setMedico(cita.getMedico());
         response.setFecha(cita.getFechaHora());
-        response.setMedico(cita.getMedico());
         response.setMotivo(cita.getMotivo());
-        logger.info("toResponse {}",response);
+        logger.info("toResponse {}", response);
         return response;
     }
 }
+

@@ -60,7 +60,7 @@ public class CitaService {
                 .doOnNext(cita -> logger.info("Cita encontrada: {}", cita))
                 .map(CitaMapper::toResponse)  // mapeo por cada entidad
                 .collectList()
-                .doOnSuccess(citas -> logger.info("Total citas encontradas: {}", util.toJsonString(citas)))
+                .doOnSuccess(citas -> logger.info("Total citas encontradas: {}", Util.toJsonString(citas)))
                 .map(ResponseEntity::ok)
                 .onErrorMap(ex -> {
                     // Si ya es una excepción personalizada, no la toques

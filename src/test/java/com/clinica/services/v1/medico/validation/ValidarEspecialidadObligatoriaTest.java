@@ -4,7 +4,7 @@ import com.clinica.services.v1.medico.domain.Medico;
 import org.junit.jupiter.api.Test;
 import reactor.test.StepVerifier;
 
-public class ValidarEspecialidadObligatoriaTest {
+class ValidarEspecialidadObligatoriaTest {
 
     private final ValidarEspecialidadObligatoria validador = new ValidarEspecialidadObligatoria();
 

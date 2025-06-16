@@ -10,11 +10,7 @@ spring:
     import: classpath:error-catalog.yml
   data:
     mongodb:
-      #uri: mongodb://mongo:27017/spring_boot_test
-      #uri: mongodb://localhost:27017/spring_boot_test
-      #uri: mongodb+srv://mongoAdmin:C0sm0%23Secure2024%21@mongo-clinica-prd.global.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000
-      uri: mongodb+srv://mongoAdmin:C0sm0%23Secure2024%21@mongo-clinica-prd.global.mongocluster.cosmos.azure.com/bdclinica?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000
-      #uri: ${SPRING_DATA_MONGODB_URI}
+           uri: mongodb+srv://mongoAdmin:C0sm0%23Secure2024%21@mongo-clinica-prd.global.mongocluster.cosmos.azure.com/bdclinica?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000
 springdoc:
   api-docs:
     path: /v3/api-docs

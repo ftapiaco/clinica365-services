@@ -9,13 +9,13 @@ import reactor.test.StepVerifier;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AuthServiceImplTest {
+class AuthServiceImplTest {
 
     private final JwtUtil jwtUtil = new JwtUtil();
     private final AuthServiceImpl authService = new AuthServiceImpl(jwtUtil);
 
     @Test
-    public void testAuthenticateSuccess() {
+    void testAuthenticateSuccess() {
         AuthRequest request = new AuthRequest("user", "pass");
 
         Mono<AuthResponse> result = authService.authenticate(request);
@@ -29,7 +29,7 @@ public class AuthServiceImplTest {
     }
 
     @Test
-    public void testAuthenticateFail() {
+    void testAuthenticateFail() {
         AuthRequest request = new AuthRequest("bad", "credentials");
 
         Mono<AuthResponse> result = authService.authenticate(request);

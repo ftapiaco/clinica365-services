@@ -10,20 +10,20 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-public class AuthControllerTest {
+class AuthControllerTest {
 
     private AuthService authService;
     private WebTestClient webTestClient;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         authService = Mockito.mock(AuthService.class);
         AuthController authController = new AuthController(authService);
         webTestClient = WebTestClient.bindToController(authController).build();
     }
 
     @Test
-    public void login_Success() {
+    void login_Success() {
         AuthRequest request = new AuthRequest();
         request.setUsername("user");
         request.setPassword("pass");
@@ -42,7 +42,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void login_Unauthorized() {
+    void login_Unauthorized() {
         AuthRequest request = new AuthRequest();
         request.setUsername("user");
         request.setPassword("wrongpass");

@@ -4,12 +4,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class JwtUtilTest {
+class JwtUtilTest {
 
     private final JwtUtil jwtUtil = new JwtUtil();
 
     @Test
-    public void testGenerateAndValidateToken() {
+    void testGenerateAndValidateToken() {
         String token = jwtUtil.generateToken("testuser");
 
         assertNotNull(token);
@@ -20,7 +20,7 @@ public class JwtUtilTest {
     }
 
     @Test
-    public void testInvalidToken() {
+    void testInvalidToken() {
         String invalidToken = "fake.token.value";
 
         assertFalse(jwtUtil.validateToken(invalidToken));
