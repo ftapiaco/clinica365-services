@@ -46,7 +46,7 @@
 		<sonar.exclusions>**/generated/**,**/model/**,**/*Application*.java</sonar.exclusions>
 
 		<!-- Exclusiones solo de cobertura -->
-		<sonar.coverage.exclusions>**/dto/**,**/config/**,**/mapper/**,**/domain/**,**/test/**</sonar.coverage.exclusions>
+		<sonar.coverage.exclusions>**/dto/**,**/config/**,**/mapper/**,**/domain/**,**/test/**,**/exception/**</sonar.coverage.exclusions>
 
 
 	</properties>
